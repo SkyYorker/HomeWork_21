@@ -1,12 +1,13 @@
 from classes import Store, Shop, Request
 
+storage = {'печеньки': 3, 'dogs': 1, 'boxes': 5}
+shop = {'cookies': 5, 'dogs': 5, 'boxes': 5}
+
+warehouses = [storage, shop]
 
 
-
-def main():
-    storage = {'печеньки': 3, 'dogs': 1, 'boxes': 5}
-    shop = {'cookies': 5, 'dogs': 5, 'boxes': 5}
-
+def main(request):
+    
 
     while True:
         print("Введите команду:")
@@ -73,4 +74,4 @@ def main():
             print("Неизвестная команда")
 
 
-main()
+main(Request(warehouses, 'Курьер забирает 3 печеньки из склад'))

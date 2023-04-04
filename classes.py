@@ -111,15 +111,16 @@ class Request:
     def __init__(self, warehouses, request_string):
         self.warehouses = warehouses
         request_list = request_string.split()
-        self.amount = int(request_list[1])
-        self.product = request_list[2]
+        self.amount = int(request_list[2])
+        self.product = request_list[3]
         self.from_place = request_list[4]
-        self.to_place = request_list[6]
+        self.to_place = request_list[5]
         for warehouse in self.warehouses:
             if warehouse == self.from_place:
                 self.from_warehouse = warehouse
             if warehouse == self.to_place:
                 self.to_warehouse = warehouse
+        return Request
         
         
 
