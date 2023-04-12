@@ -1,77 +1,73 @@
 from classes import Store, Shop, Request
 
-storage = {'печеньки': 3, 'dogs': 1, 'boxes': 5}
-shop = {'cookies': 5, 'dogs': 5, 'boxes': 5}
+
+storage = Store(items={'печеньки': 5, 'собачки': 1, 'коробки': 5})
+shop = Shop(items={'печеньки': 5, 'собачки': 5, 'коробки': 5})
 
 warehouses = [storage, shop]
 
+print("Для выхода введите Q")
 
-def main(request):
+while True:
+    print("Введите команду:")
+    user_input = input().split()
+    reqest = Request(warehouses, user_input)
+
+    print()
+
+    if user_input[0] == 'Курьер' and user_input[1] == 'забирает' and reqest.from_place == 'склад':
+        item = reqest.product
+        count = reqest.amount
+        if item in storage.get_items() and storage.get_items()[item] >= count:
+            storage.remove(item, count)
+            print("Нужное количество есть на складе")
+            print(f"Курьер забрал {count} {item} со склад\nКурьер везет {count} {item} со склад в магазин")                      
+            if shop.add(item, count):
+                shop.add(item, count)
+                print(f"Курьер доставил {count} {item} в магазин\n")
+            else:
+                print(f"В магазине недостаточно места")
+            print(f"В склад хранится:\n{storage}\nВ магазин хранится:\n{shop}")
+        elif item in storage.get_items() and storage.get_items()[item] < count and shop.get_items()[item] > count:
+            print("Не хватает на складе, попробуйте заказать меньше")
+
+    elif user_input[0] == 'Доставить' and reqest.to_place == 'склад':
+        item = reqest.product
+        count = reqest.amount
+        if item in storage.get_items() and storage.get_items()[item] >= count:
+            shop.remove(item, count)
+            print("Нужное количество есть на складе")
+            print(f"Курьер забрал {count} {item} со склада\nКурьер везет {count} {item} из магазин в склад")
+            if storage.add(item, count):
+                storage.add(item, count)
+                print(f"Курьер доставил {count} {item} в магазин\n")
+            else:
+                print(f"В магазине недостаточно места")            
+            print(f"Курьер доставил {count} {item} на склад")
+            print(f"В склад хранится:\n{storage}\nВ магазин хранится:\n{shop}")
+        elif item in storage.get_items() and storage.get_items()[item] < count and shop.get_items()[item] > count:
+            print("Не хватает на складе, попробуйте заказать меньше")
+        else: 
+            print(f"В магазине недостаточно {item} для выполнения заказа")
+
+    elif user_input[0] == 'Доставить' and reqest.to_place == 'магазин':
+        item = reqest.product
+        count = reqest.amount
+        if item in shop.get_items() and storage.get_items()[item] >= count:
+            storage.remove(item, count)
+            print("Нужное количество есть на складе")
+            print(f"Курьер забрал {count} {item} из склада\nКурьер везет {count} {item} со склад в магазин")           
+            if shop.add(item, count):
+                shop.add(item, count)
+                print(f"Курьер доставил {count} {item} в магазин\n")
+            else:
+                print(f"В магазине недостаточно места")
+            print(f"В склад хранится:\n{storage}\nВ магазин хранится:\n{shop}")
+        elif item in storage.get_items() and storage.get_items()[item] < count and shop.get_items()[item] > count:
+            print("Не хватает на складе, попробуйте заказать меньше")           
+    if user_input[0] == 'q' or user_input[0] == 'Q':
+        break          
+    else:
+        print("Неизвестная команда")
+
     
-
-    while True:
-        print("Введите команду:")
-        user_input = input().split()
-        print()
-        
-        if user_input[0] == 'Курьер' and user_input[1] == 'забирает':
-            item = user_input[3]
-            count = int(user_input[2])
-            if item in storage and storage[item] >= count:
-                storage[item] -= count
-                print("Нужное количество есть на складе")
-                print("Курьер забрал", count, item, "со склад")
-                print("Курьер везет", count, item, "со склад в магазин")
-                if item in shop:
-                    shop[item] += count
-                else:
-                    shop[item] = count
-                print("Курьер доставил", count, item, "в магазин")
-                print()
-                print("В склад хранится:")
-                for item, count in storage.items():
-                    print(count, item)
-                print()
-                print("В магазин хранится:")
-                for item, count in shop.items():
-                    print(count, item)
-            else:
-                print("На складе недостаточно", item, "для выполнения заказа")
-
-        elif user_input[0] == 'Доставить' and user_input[3] == 'склад':
-            item = user_input[2]
-            count = int(user_input[1])
-            if item in storage and storage[item] >= count:
-                storage[item] -= count
-                print("Нужное количество есть на складе")
-                print("Курьер забрал", count, item, "со склад")
-                print("Курьер везет", count, item, "со склад в магазин")
-                if item in shop:
-                    shop[item] += count
-                else:
-                    shop[item] = count
-                print("Курьер доставил", count, item, "в магазин")
-            else:
-                print("Не хватает на складе, попробуйте заказать меньше")
-
-        elif user_input[0] == 'Доставить' and user_input[3] == 'магазин':
-            item = user_input[2]
-            count = int(user_input[1])
-            if item in shop and shop[item] >= count:
-                shop[item] -= count
-                print("Нужное количество есть в магазине")
-                print("Курьер забрал", count, item, "из магазина")
-                print("Курьер везет", count, item, "из магазина на склад")
-                if item in storage:
-                    storage[item] += count
-                else:
-                    storage[item] = count
-                print("Курьер доставил", count, item, "на склад")
-            else:
-                print("В магазине недостаточно", item, "для выполнения заказа")
-
-        else:
-            print("Неизвестная команда")
-
-
-main(Request(warehouses, 'Курьер забирает 3 печеньки из склад'))
