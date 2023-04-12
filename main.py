@@ -11,13 +11,13 @@ print("Для выхода введите Q")
 while True:
     print("Введите команду:")
     user_input = input().split()
-    reqest = Request(warehouses, user_input)
+    request = Request(warehouses, user_input)
 
     print()
 
-    if user_input[0] == 'Курьер' and user_input[1] == 'забирает' and reqest.from_place == 'склад':
-        item = reqest.product
-        count = reqest.amount
+    if user_input[0] == 'Курьер' and user_input[1] == 'забирает' and request.from_place == 'склад':
+        item = request.product
+        count = request.amount
         if item in storage.get_items() and storage.get_items()[item] >= count:
             storage.remove(item, count)
             print("Нужное количество есть на складе")
@@ -31,9 +31,9 @@ while True:
         elif item in storage.get_items() and storage.get_items()[item] < count and shop.get_items()[item] > count:
             print("Не хватает на складе, попробуйте заказать меньше")
 
-    elif user_input[0] == 'Доставить' and reqest.to_place == 'склад':
-        item = reqest.product
-        count = reqest.amount
+    elif user_input[0] == 'Доставить' and request.to_place == 'склад':
+        item = request.product
+        count = request.amount
         if item in storage.get_items() and storage.get_items()[item] >= count:
             shop.remove(item, count)
             print("Нужное количество есть на складе")
@@ -50,9 +50,9 @@ while True:
         else: 
             print(f"В магазине недостаточно {item} для выполнения заказа")
 
-    elif user_input[0] == 'Доставить' and reqest.to_place == 'магазин':
-        item = reqest.product
-        count = reqest.amount
+    elif user_input[0] == 'Доставить' and request.to_place == 'магазин':
+        item = request.product
+        count = request.amount
         if item in shop.get_items() and storage.get_items()[item] >= count:
             storage.remove(item, count)
             print("Нужное количество есть на складе")
